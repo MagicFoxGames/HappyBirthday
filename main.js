@@ -782,6 +782,11 @@ class Firework {
         for (let i = 0; i < this.rockets.length; i++)
             this.rockets[i].draw();
     }
+
+    resize() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height;
+    }
 }
 
 class Rocket {
@@ -927,4 +932,9 @@ window.onload = function() {
     firework = new Firework();
     
     tick();
+}
+
+window.onresize = function() {
+    canvas.width = document.body.clientWidth;
+    firework.resize();
 }
