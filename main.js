@@ -829,7 +829,7 @@ class FireObject {
         this.scale2 = 0.1;
         this.removeCount = 1;
         this.isDead = false;
-        this.count = arr.length < 1500 ? arr.length : 1500;//arr.length / 3;
+        this.count = arr.length < 2000 ? arr.length : 2000;//arr.length / 3;
         this.isFlashed = false;
         this.k = randInt(0, 3);
         this.ticks = 0;
