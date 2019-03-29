@@ -826,10 +826,13 @@ class FireObject {
         this.arr = [];
         this.offset = 3;
         this.scale = 1;
+        this.scale2 = 0.1;
         this.removeCount = 1;
         this.isDead = false;
-        this.count = arr.length / 3;
+        this.count = arr.length < 1500 ? arr.length : 1500;//arr.length / 3;
         this.isFlashed = false;
+        this.k = randInt(0, 3);
+        this.ticks = 0;
 
         let exists = [];
         let v = 0;
@@ -841,17 +844,17 @@ class FireObject {
             this.arr.push(arr[v]);
             exists.push(v);
         }
-        sky.classList.toggle('flash', true);
+        sky.classList.toggle('flash', false);
     }
 
     update() {
+        if (this.ticks === 1) {
+            
+            sky.classList.toggle('flash', true);
+        }
+        
         if (ticks % 10 === 0) {
             this.removeCount++;
-        }
-
-        if (ticks % 100 === 0 && !this.isFlashed) {
-            sky.classList.toggle('flash', false);
-            this.isFlashed = true;
         }
 
         this.arr.splice(Math.floor(Math.random() * this.arr.length), this.removeCount);
@@ -861,18 +864,23 @@ class FireObject {
             this.scale += 0.01;
         }
 
+        if (this.scale2 < 1) this.scale2 += (1 - this.scale2) * 0.05;
+        //console.log(this.scale2);
+
         if (this.arr.length < 1) {
             this.isDead = true;
         }
+
+        this.ticks++;
     }
 
     draw() {
         for (let i = 0; i < this.arr.length; i++) {
             ctx.beginPath();
-            ctx.fillStyle = randColor(150, 255);
+            ctx.fillStyle = randColor(150, 255, this.k);
             let x = this.arr[i][0] + rand(-this.offset, this.offset);
             let y = this.arr[i][1] + rand(-this.offset, this.offset);
-            ctx.rect(this.x + x * this.scale, this.y + y * this.scale, 3, 3);
+            ctx.rect(this.x + x * this.scale * this.scale2, this.y + y * this.scale * this.scale2, 4, 4);
             ctx.fill();
         }
     }
@@ -886,8 +894,8 @@ function rand(min, max) {
     return Math.random() * (max - min) - (-min);
 }
 
-function randColor(min, max) {
-    let k = randInt(0, 3);
+function randColor(min, max, kk=null) {
+    let k = kk == null ? randInt(0, 3) : kk;
     let r = k === 0 ? Math.floor(rand(min, max)) : Math.floor(rand(min, max)) / 3;
     let g = k === 1 ? Math.floor(rand(min, max)) : Math.floor(rand(min, max)) / 3;
     let b = k === 2 ? Math.floor(rand(min, max)) : Math.floor(rand(min, max)) / 3;
